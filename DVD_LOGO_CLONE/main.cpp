@@ -10,7 +10,7 @@
 remainig problems
 
 1- changing resolution is buggy because of the if statments
-2- make a file that reads input for the game
+2- make a file that  reads input for the game
 
 
 */
