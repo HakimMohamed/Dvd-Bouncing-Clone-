@@ -1,19 +1,51 @@
 #include<iostream>
 #include<SFML/Graphics.hpp>
-
-#define WIDTH	800
-#define HEIGHT  800
-
+#include<fstream>
 
 /*
 
 remainig problems
 
 1- changing resolution is buggy because of the if statments
-2- make a file that  reads input for the game
-
+2- make a config file that  reads input for width and height
 
 */
+#define CONFIG_FILE_PATH "bin/game.txt"
+
+size_t WIDTH;
+size_t HEIGHT;
+
+bool loadGameConfig()
+{
+	std::ifstream in(CONFIG_FILE_PATH);
+	
+	if (!in.is_open())
+	{
+		std::cout << "Cannot open file"<<std::endl;
+		return false;
+	}
+
+	std::string param;
+	size_t value;
+
+	while (!in.eof())
+	{
+		in >> param;
+		in >> value;
+
+		if (param == "WIDTH")
+		{
+			WIDTH = value;
+		}
+		else if (param == "HEIGHT")
+		{
+			HEIGHT = value;
+		}
+
+	}
+	in.close();
+	return true;
+}
 
 
 
@@ -24,8 +56,12 @@ void changeColor(sf::CircleShape& shape)
 
 int main(int argc, char* argv[])
 {
-
-	sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "Assignment 1", sf::Style::Default);
+	if (!loadGameConfig())
+	{
+		std::cout << "failed to read config";
+		return EXIT_FAILURE;
+	}
+	sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "DVD", sf::Style::Default);
 
 	window.setFramerateLimit(60);
 
@@ -77,7 +113,7 @@ int main(int argc, char* argv[])
 		}
 
 
-		if (x > 0 && y + circle.getLocalBounds().height > WIDTH)
+		if (x > 0 && y + circle.getLocalBounds().height > HEIGHT)
 		{
 			circleMoveSpeedY *= -1;
 			std::cout << "4" << std::endl;
